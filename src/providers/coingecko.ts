@@ -45,7 +45,10 @@ export class CoinGeckoProvider implements RateProvider {
     const ids = fromId && toId ? `${fromId},${toId}` : (fromId ?? toId);
     const vs = fromId && toId ? "usd" : (fromId ? to : from).toLowerCase();
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(ids)}&vs_currencies=${encodeURIComponent(vs)}&include_last_updated_at=true`;
-    const headers = this.apiKey ? { "x-cg-demo-api-key": this.apiKey } : undefined;
+    const headers = {
+      "User-Agent": "RateRelay/1.0",
+      ...(this.apiKey ? { "x-cg-demo-api-key": this.apiKey } : {}),
+    };
     const data = await fetchJson<PriceData>(this.fetcher, url, headers);
 
     let rate: number;
