@@ -48,6 +48,9 @@
 /source Binance
 /source reset
 /time UTC8
+/time UTC9
+/time UTC+9
+/time UTC-1
 /time Shanghai
 /time Taipei
 /time Osaka
@@ -65,9 +68,12 @@ Inline 临时修改示例：
 ```text
 @你的机器人 5.2 USDT CNY none Shanghai
 @你的机器人 5.2 USDT CNY Coinbase UTC
+@你的机器人 7891 USDT SOL Binance UTC+9
 ```
 
 第一条使用个人默认汇率源，并只对本次结果使用上海时区；第二条同时指定 Coinbase 和 UTC。Inline 覆盖不会修改 `/source` 或 `/time` 保存的设置。支持 `Shanghai`、`Taipei`、`Osaka`、`LosAngeles` 等裸城市，也支持 `Asia/Taipei`、`America/Los_Angeles` 等标准 IANA 时区。
+
+固定整点偏移支持 `UTC9`、`UTC+9`、`UTC-1` 等写法，范围为 `UTC-12` 到 `UTC+14`。`UTC9` 等同于 `UTC+9`；`UTC+8` 和 `UTC8` 保持映射到北京时间。
 
 汇率源名称不区分大小写，但必须完整拼写：
 

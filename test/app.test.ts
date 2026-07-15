@@ -88,6 +88,7 @@ describe("Telegram updates", () => {
     expect(reply).toContain("当前时区：Asia/Shanghai (UTC+8)");
     expect(reply).toContain("@机器人 5.2 USDT CNY none Shanghai");
     expect(reply).toContain("none 表示使用个人默认汇率源");
+    expect(reply).toContain("UTC9、/time UTC+9、/time UTC-1");
   });
 
   it("saves a canonical personal time zone", async () => {

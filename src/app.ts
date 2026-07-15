@@ -97,6 +97,7 @@ export function timeHelp(currentTimeZone: string, at = new Date()): string {
   return [
     `🕒 当前时区：${timeZoneLabel(currentTimeZone, at)}`,
     "设置：/time Shanghai、/time Taipei、/time Osaka、/time LosAngeles、/time UTC8",
+    "固定偏移：/time UTC9、/time UTC+9、/time UTC-1",
     "重置：/time reset",
     "Inline：@机器人 5.2 USDT CNY none Shanghai",
     "💡 none 表示使用个人默认汇率源，只用于占住汇率源位置；必须完整拼写。",

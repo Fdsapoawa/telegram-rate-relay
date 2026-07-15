@@ -47,3 +47,18 @@ it("formats a daily reference rate as a date instead of a fabricated time", () =
 
   expect(text).toContain("📡 Frankfurter · 参考 2026-07-14 · Asia/Shanghai (UTC+8)");
 });
+
+it("formats a result in a fixed UTC offset", () => {
+  const text = formatResult(
+    { amount: 1, from: "USD", to: "SOL", source: "binance" },
+    {
+      rate: 0.01,
+      source: "Binance",
+      asOf: new Date("2026-07-15T06:30:25Z"),
+      timeKind: "retrieved",
+    },
+    "Etc/GMT-9",
+  );
+
+  expect(text).toContain("获取 15:30:25 · UTC+9");
+});

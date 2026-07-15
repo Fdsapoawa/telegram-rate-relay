@@ -51,6 +51,13 @@ describe("parseConversion", () => {
     });
   });
 
+  it("accepts a signed UTC offset inline", () => {
+    expect(parseConversion("1 USD SOL Binance UTC-1")).toMatchObject({
+      source: "binance",
+      timeZone: "Etc/GMT+1",
+    });
+  });
+
   it("requires an exact none placeholder", () => {
     expect(() => parseConversion("5.2 USDT CNY nonew Asia/Shanghai")).toThrowError(
       new ParseError("未知汇率源：nonew。发送 /source 查看可用源"),

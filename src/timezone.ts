@@ -52,10 +52,25 @@ export class TimeZoneError extends Error {
   }
 }
 
+function normalizeUtcOffset(input: string): string | undefined {
+  const match = input.match(/^utc([+-]?)(\d{1,2})$/i);
+  if (!match) return undefined;
+
+  const hours = Number(match[2]) * (match[1] === "-" ? -1 : 1);
+  if (hours < -12 || hours > 14) throw new TimeZoneError(input);
+  if (hours === 0) return "UTC";
+
+  const etcSign = hours > 0 ? "-" : "+";
+  return `Etc/GMT${etcSign}${Math.abs(hours)}`;
+}
+
 export function normalizeTimeZone(value: string): string {
   const input = value.trim();
   const alias = TIME_ZONE_ALIASES[input.toLowerCase()];
   if (alias) return alias;
+
+  const utcOffset = normalizeUtcOffset(input);
+  if (utcOffset) return utcOffset;
 
   try {
     return new Intl.DateTimeFormat("en-US", { timeZone: input }).resolvedOptions().timeZone;
@@ -80,5 +95,10 @@ function utcOffset(date: Date, timeZone: string): string {
 }
 
 export function timeZoneLabel(timeZone: string, date: Date): string {
+  const fixedOffset = timeZone.match(/^Etc\/GMT([+-])(\d{1,2})$/);
+  if (fixedOffset) {
+    const sign = fixedOffset[1] === "-" ? "+" : "-";
+    return `UTC${sign}${Number(fixedOffset[2])}`;
+  }
   return `${timeZone} (${utcOffset(date, timeZone)})`;
 }
