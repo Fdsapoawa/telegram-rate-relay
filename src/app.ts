@@ -43,7 +43,6 @@ export interface TelegramUpdate {
 
 const SOURCE_DESCRIPTIONS: Record<SourceKey, string> = {
   coinbase: "法币 / 加密货币",
-  coingecko: "加密货币综合市场价",
   binance: "Binance 现货交易对",
   kraken: "Kraken 现货交易对",
   frankfurter: "ECB 法币参考价",
@@ -113,8 +112,11 @@ async function selectedPreferences(
   const settings = userId !== undefined && needsSettings
     ? await deps.settings.get(userId)
     : {};
+  const savedSource = settings.source && Object.hasOwn(SOURCE_NAMES, settings.source)
+    ? settings.source
+    : deps.defaultSource;
   const source = request.usesDefaultSource
-    ? (settings.source ?? deps.defaultSource)
+    ? savedSource
     : request.source;
   return {
     request: { ...request, source },
@@ -160,9 +162,10 @@ async function handleSourceCommand(
   deps: BotDependencies,
 ): Promise<void> {
   if (!argument) {
-    const current = userId === undefined
-      ? deps.defaultSource
-      : ((await deps.settings.get(userId)).source ?? deps.defaultSource);
+    const stored = userId === undefined ? undefined : (await deps.settings.get(userId)).source;
+    const current = stored && Object.hasOwn(SOURCE_NAMES, stored)
+      ? stored
+      : deps.defaultSource;
     await deps.telegram.sendMessage(chatId, sourceHelp(current));
     return;
   }

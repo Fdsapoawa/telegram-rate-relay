@@ -50,12 +50,12 @@ describe("DurableObjectUserSettingsStore", () => {
     } as unknown as DurableObjectNamespace;
     const store = new DurableObjectUserSettingsStore(namespace);
 
-    await store.setSource(7, "coingecko");
+    await store.setSource(7, "binance");
 
     expect(namespace.idFromName).toHaveBeenCalledWith("7");
     const request = fetcher.mock.calls[0]?.[0] as Request;
     expect(request.method).toBe("PUT");
     expect(new URL(request.url).pathname).toBe("/source");
-    await expect(request.text()).resolves.toBe("coingecko");
+    await expect(request.text()).resolves.toBe("binance");
   });
 });

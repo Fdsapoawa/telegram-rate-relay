@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TtlCache } from "../src/providers/cache";
 import { CoinbaseProvider } from "../src/providers/coinbase";
-import { CoinGeckoProvider } from "../src/providers/coingecko";
 import { FrankfurterProvider } from "../src/providers/frankfurter";
 import { KrakenProvider } from "../src/providers/kraken";
 import { RateService } from "../src/providers/registry";
@@ -47,17 +46,6 @@ describe("rate providers", () => {
       "https://api.coinbase.com/v2/exchange-rates?currency=USDT",
       expect.any(Object),
     );
-  });
-
-  it("reads a CoinGecko aggregate crypto-to-fiat rate", async () => {
-    const fetcher = jsonFetcher({ tether: { cny: 7.21, last_updated_at: 1784097025 } });
-    const provider = new CoinGeckoProvider(fetcher);
-
-    const quote = await provider.getRate("USDT", "CNY");
-    expect(quote.rate).toBe(7.21);
-    expect(quote.source).toBe("CoinGecko");
-    expect(quote.asOf.toISOString()).toBe("2026-07-15T06:30:25.000Z");
-    expect(quote.timeKind).toBe("market");
   });
 
   it("registers Binance as a selectable source", async () => {

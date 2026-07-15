@@ -23,6 +23,10 @@ describe("parseConversion", () => {
     expect(parseConversion("1 BTC USDT bInAnCe").source).toBe("binance");
   });
 
+  it("rejects the removed CoinGecko source", () => {
+    expect(() => parseConversion("1 BTC USD CoinGecko")).toThrow(ParseError);
+  });
+
   it("requires an exact source name", () => {
     expect(() => parseConversion("5.2 USDT CNY Coinbasew")).toThrowError(
       new ParseError("未知汇率源：Coinbasew。发送 /source 查看可用源"),

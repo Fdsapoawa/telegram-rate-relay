@@ -11,7 +11,6 @@ export interface Env {
   TELEGRAM_WEBHOOK_SECRET: string;
   DEFAULT_SOURCE?: string;
   CACHE_TTL_SECONDS?: string;
-  COINGECKO_API_KEY?: string;
   USER_SETTINGS?: DurableObjectNamespace;
 }
 
@@ -25,9 +24,9 @@ function defaultSource(value: string | undefined): SourceKey {
 
 function dependencies(env: Env): BotDependencies {
   const ttl = parseCacheTtl(env.CACHE_TTL_SECONDS);
-  const signature = `${ttl}:${env.COINGECKO_API_KEY ?? ""}`;
+  const signature = String(ttl);
   if (!service || serviceSignature !== signature) {
-    service = new RateService({ cacheTtlSeconds: ttl, coinGeckoApiKey: env.COINGECKO_API_KEY });
+    service = new RateService({ cacheTtlSeconds: ttl });
     serviceSignature = signature;
   }
   return {

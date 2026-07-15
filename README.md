@@ -26,15 +26,14 @@
 | 名称 | 能力 | 说明 |
 | --- | --- | --- |
 | `Coinbase` | 法币、加密货币 | 默认源，市场参考价 |
-| `CoinGecko` | 包含加密货币的换算 | 多交易所综合市场价 |
-| `Binance` | Binance 支持的加密货币现货对 | 直接、反向或经 USDT 桥接；无需 API Key |
+| `Binance` | Binance 支持的现货交易对 | 直接、反向或经 USDT 桥接；无需 API Key |
 | `Kraken` | Kraken 支持的现货交易对 | 交易所最新成交价 |
 | `Frankfurter` | 法币 | ECB 参考汇率，银行工作日更新 |
 
 ```text
 5.2 USDT CNY
 5.2 USDT CNY coinbase
-1 BTC USD CoinGecko
+7891 USD SOL Binance
 1 BTC USDT Binance
 100 EUR CNY Frankfurter
 5.2 USDT CNY none Shanghai
@@ -46,7 +45,6 @@
 ## 个人设置与 Inline 覆盖
 
 ```text
-/source CoinGecko
 /source Binance
 /source reset
 /time UTC8
@@ -137,8 +135,6 @@ Cloudflare 会引导你：
 4. 分别添加上面两个名称，类型选择 `Secret`。
 5. 保存后进入 `Deployments`，重新部署最新版本。
 
-CoinGecko 无 Key 也能使用。需要更高请求额度时，在同一页面添加可选 Secret `COINGECKO_API_KEY`。
-
 ### 4. 获取 Worker 地址
 
 部署完成后进入 Worker 的 `Settings` → `Domains & Routes`，复制 `workers.dev` 地址，例如：
@@ -192,7 +188,7 @@ https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo
 ```text
 5.2 USDT CNY
 /source
-/source CoinGecko
+/source Binance
 /time
 /time UTC
 ```
@@ -221,8 +217,8 @@ https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo
 ## 注意
 
 - 不支持的币对会直接报错，不会偷偷切换汇率源。
-- Coinbase 和 CoinGecko 是市场参考价；Kraken 是单一交易所价格；Frankfurter 是 ECB 参考价。
-- Binance 使用无需 API Key 的官方公开 Spot 行情接口；`USDT/CNY` 等不存在的交易对会明确报错。
+- Coinbase 是市场参考价；Kraken 是单一交易所价格；Frankfurter 是 ECB 参考价。
+- Binance 使用无需 API Key 的官方公开 Spot 行情域名 `data-api.binance.vision`；不存在的交易对会明确报错。
 - `获取` 表示机器人请求汇率源的时间；`行情` 表示汇率源提供的行情时间；`参考` 表示参考汇率日期。
 - Worker 默认缓存 30 秒；可将 `CACHE_TTL_SECONDS` 设为 `0` 关闭，但上游汇率源仍可能自行缓存。
 - 不要把 Telegram Bot Token 或 Webhook Secret 提交到 Git。

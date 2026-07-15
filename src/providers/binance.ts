@@ -57,7 +57,7 @@ export class BinanceProvider implements RateProvider {
     let response: Response;
     try {
       response = await this.fetcher(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(symbol)}`,
+        `https://data-api.binance.vision/api/v3/ticker/price?symbol=${encodeURIComponent(symbol)}`,
         {
           headers: {
             Accept: "application/json",

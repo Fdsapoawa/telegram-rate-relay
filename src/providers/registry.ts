@@ -3,14 +3,12 @@ import type { ConversionRequest, SourceKey } from "../parser";
 import { TtlCache } from "./cache";
 import { BinanceProvider } from "./binance";
 import { CoinbaseProvider } from "./coinbase";
-import { CoinGeckoProvider } from "./coingecko";
 import { FrankfurterProvider } from "./frankfurter";
 import { KrakenProvider } from "./kraken";
 import { ProviderError, runtimeFetch, type Fetcher, type RateProvider } from "./types";
 
 export interface ProviderOptions {
   cacheTtlSeconds: number;
-  coinGeckoApiKey?: string;
   fetcher?: Fetcher;
 }
 
@@ -22,7 +20,6 @@ export class RateService {
     const fetcher = options.fetcher ?? runtimeFetch;
     const providers: Array<[SourceKey, RateProvider]> = [
       ["coinbase", new CoinbaseProvider(fetcher)],
-      ["coingecko", new CoinGeckoProvider(fetcher, options.coinGeckoApiKey)],
       ["binance", new BinanceProvider(fetcher)],
       ["kraken", new KrakenProvider(fetcher)],
       ["frankfurter", new FrankfurterProvider(fetcher)],

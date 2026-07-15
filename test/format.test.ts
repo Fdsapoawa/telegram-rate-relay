@@ -20,17 +20,17 @@ it("formats a compact two-line result with canonical source spelling", () => {
 
 it("labels a source-provided market timestamp in the selected time zone", () => {
   const text = formatResult(
-    { amount: 1, from: "BTC", to: "USD", source: "coingecko", timeZone: undefined },
+    { amount: 1, from: "BTC", to: "USD", source: "binance", timeZone: undefined },
     {
       rate: 64684.06,
-      source: "CoinGecko",
+      source: "Binance",
       asOf: new Date("2026-07-15T06:30:25Z"),
       timeKind: "market",
     },
     "UTC",
   );
 
-  expect(text).toContain("📡 CoinGecko · 行情 06:30:25 · UTC (UTC+0)");
+  expect(text).toContain("📡 Binance · 行情 06:30:25 · UTC (UTC+0)");
 });
 
 it("formats a daily reference rate as a date instead of a fabricated time", () => {

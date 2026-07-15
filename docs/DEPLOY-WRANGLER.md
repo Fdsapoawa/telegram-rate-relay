@@ -44,7 +44,7 @@ DEFAULT_SOURCE = "coinbase"
 CACHE_TTL_SECONDS = "30"
 ```
 
-- `DEFAULT_SOURCE`：`coinbase`、`coingecko`、`binance`、`kraken` 或 `frankfurter`
+- `DEFAULT_SOURCE`：`coinbase`、`binance`、`kraken` 或 `frankfurter`
 - `CACHE_TTL_SECONDS`：`0` 关闭缓存；允许范围 `0` 到 `3600`
 
 `wrangler.toml` 已声明 `USER_SETTINGS` Durable Object。首次部署时 Wrangler 会自动创建，用于保存每个 Telegram 用户的个人汇率源和时区，无需手动创建 KV。
@@ -57,12 +57,6 @@ npx wrangler secret put TELEGRAM_WEBHOOK_SECRET
 ```
 
 `TELEGRAM_WEBHOOK_SECRET` 使用随机字符串，只能包含 `A-Z`、`a-z`、`0-9`、`_`、`-`，长度 1 到 256。
-
-CoinGecko Key 可选：
-
-```bash
-npx wrangler secret put COINGECKO_API_KEY
-```
 
 ## 4. 部署
 

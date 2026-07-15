@@ -25,7 +25,7 @@ describe("BinanceProvider", () => {
       timeKind: "retrieved",
     });
     expect(fetcher).toHaveBeenCalledWith(
-      "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT",
+      "https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT",
       expect.objectContaining({
         headers: expect.objectContaining({ "User-Agent": "RateRelay/1.0" }),
       }),
@@ -38,6 +38,14 @@ describe("BinanceProvider", () => {
     const quote = await provider.getRate("USDT", "BTC");
 
     expect(quote.rate).toBeCloseTo(1 / 64688.46, 14);
+  });
+
+  it("converts USD to SOL through Binance's reverse spot pair", async () => {
+    const provider = new BinanceProvider(binanceFetcher({ SOLUSD: "77.75" }), () => at);
+
+    const quote = await provider.getRate("USD", "SOL");
+
+    expect(quote.rate).toBeCloseTo(1 / 77.75, 14);
   });
 
   it("bridges two assets through USDT", async () => {

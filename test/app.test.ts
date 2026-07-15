@@ -32,7 +32,7 @@ describe("Telegram updates", () => {
 
     expect(deps.telegram.sendMessage).toHaveBeenCalledWith(42, sourceHelp("coinbase"));
     expect(sourceHelp("coinbase")).toContain("⭐ Coinbase");
-    expect(sourceHelp("coinbase")).toContain("CoinGecko");
+    expect(sourceHelp("coinbase")).not.toContain("CoinGecko");
     expect(sourceHelp("coinbase")).toContain("Binance");
     expect(sourceHelp("coinbase")).toContain("Frankfurter");
   });
@@ -182,14 +182,29 @@ describe("Telegram updates", () => {
   it("saves a case-insensitive exact personal source", async () => {
     const deps = dependencies();
     await handleUpdate(
-      { message: { chat: { id: 42 }, from: { id: 7 }, text: "/source cOiNgEcKo" } },
+      { message: { chat: { id: 42 }, from: { id: 7 }, text: "/source bInAnCe" } },
       deps,
     );
 
-    expect(deps.settings.setSource).toHaveBeenCalledWith(7, "coingecko");
+    expect(deps.settings.setSource).toHaveBeenCalledWith(7, "binance");
     expect(deps.telegram.sendMessage).toHaveBeenCalledWith(
       42,
-      expect.stringContaining("默认汇率源已设置：CoinGecko"),
+      expect.stringContaining("默认汇率源已设置：Binance"),
+    );
+  });
+
+  it("rejects CoinGecko after the source is removed", async () => {
+    const deps = dependencies();
+
+    await handleUpdate(
+      { message: { chat: { id: 42 }, from: { id: 7 }, text: "/source CoinGecko" } },
+      deps,
+    );
+
+    expect(deps.settings.setSource).not.toHaveBeenCalled();
+    expect(deps.telegram.sendMessage).toHaveBeenCalledWith(
+      42,
+      expect.stringContaining("CoinGecko"),
     );
   });
 
@@ -223,14 +238,14 @@ describe("Telegram updates", () => {
 
   it("uses a personal source only when the message does not specify one", async () => {
     const deps = dependencies();
-    vi.mocked(deps.settings.get).mockResolvedValue({ source: "coingecko" });
+    vi.mocked(deps.settings.get).mockResolvedValue({ source: "kraken" });
 
     await handleUpdate(
       { message: { chat: { id: 42 }, from: { id: 7 }, text: "5.2 USDT CNY" } },
       deps,
     );
     expect(deps.getQuote).toHaveBeenLastCalledWith(
-      expect.objectContaining({ source: "coingecko" }),
+      expect.objectContaining({ source: "kraken" }),
     );
 
     await handleUpdate(
@@ -244,6 +259,20 @@ describe("Telegram updates", () => {
       deps,
     );
     expect(deps.getQuote).toHaveBeenLastCalledWith(
+      expect.objectContaining({ source: "coinbase" }),
+    );
+  });
+
+  it("falls back when a removed source remains in personal settings", async () => {
+    const deps = dependencies();
+    vi.mocked(deps.settings.get).mockResolvedValue({ source: "coingecko" as never });
+
+    await handleUpdate(
+      { message: { chat: { id: 42 }, from: { id: 7 }, text: "5.2 USDT CNY" } },
+      deps,
+    );
+
+    expect(deps.getQuote).toHaveBeenCalledWith(
       expect.objectContaining({ source: "coinbase" }),
     );
   });
