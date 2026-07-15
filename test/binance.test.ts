@@ -25,7 +25,7 @@ describe("BinanceProvider", () => {
       timeKind: "retrieved",
     });
     expect(fetcher).toHaveBeenCalledWith(
-      "https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT",
+      "https://api-gcp.binance.com/api/v3/ticker/price?symbol=BTCUSDT",
       expect.objectContaining({
         headers: expect.objectContaining({ "User-Agent": "RateRelay/1.0" }),
       }),
