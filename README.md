@@ -35,7 +35,12 @@
 100 EUR CNY Frankfurter
 ```
 
-`Coinbase`、`cOINBASE`、`cOiNbAsE` 等价。`Coinbasew` 不匹配。
+汇率源名称不区分大小写，但必须完整拼写：
+
+```text
+可用：Coinbase、cOINBASE、cOiNbAsE
+拒绝：Coinbasew（末尾多了一个 w）
+```
 
 ## 纯网页一键部署
 
