@@ -1,3 +1,5 @@
+import { TimeZoneError, normalizeTimeZone } from "./timezone";
+
 export const SOURCE_NAMES = {
   coinbase: "Coinbase",
   coingecko: "CoinGecko",
@@ -12,6 +14,8 @@ export interface ConversionRequest {
   from: string;
   to: string;
   source: SourceKey;
+  timeZone?: string;
+  usesDefaultSource?: true;
 }
 
 const CURRENCY_ALIASES: Record<string, string> = {
@@ -48,17 +52,20 @@ function normalizeCurrency(value: string): string {
   return normalized;
 }
 
-function normalizeSource(value: string | undefined, defaultSource: SourceKey): SourceKey {
-  if (!value) return defaultSource;
+export function parseSource(value: string): SourceKey {
   const normalized = value.toLowerCase();
   if (Object.hasOwn(SOURCE_NAMES, normalized)) return normalized as SourceKey;
   throw new ParseError(`未知汇率源：${value}。发送 /source 查看可用源`);
 }
 
+function normalizeSource(value: string | undefined, defaultSource: SourceKey): SourceKey {
+  return value ? parseSource(value) : defaultSource;
+}
+
 export function parseConversion(input: string, defaultSource: SourceKey = "coinbase"): ConversionRequest {
   const parts = input.trim().split(/\s+/);
-  if (parts.length < 3 || parts.length > 4) {
-    throw new ParseError("格式：金额 源币 目标币 [汇率源]");
+  if (parts.length < 3 || parts.length > 5) {
+    throw new ParseError("格式：金额 源币 目标币 [汇率源|none] [时区]");
   }
 
   const amount = Number(parts[0].replaceAll(",", ""));
@@ -66,10 +73,32 @@ export function parseConversion(input: string, defaultSource: SourceKey = "coinb
     throw new ParseError("金额必须大于 0");
   }
 
+  const sourceToken = parts[3];
+  const usesDefaultPlaceholder = sourceToken?.toLowerCase() === "none";
+  const usesDefaultSource = !sourceToken || usesDefaultPlaceholder;
+  if (usesDefaultPlaceholder && !parts[4]) {
+    throw new ParseError("none 后必须指定时区。发送 /time 查看用法");
+  }
+  const source = usesDefaultPlaceholder
+    ? defaultSource
+    : normalizeSource(sourceToken, defaultSource);
+
+  let timeZone: string | undefined;
+  if (parts[4]) {
+    try {
+      timeZone = normalizeTimeZone(parts[4]);
+    } catch (error) {
+      if (error instanceof TimeZoneError) throw new ParseError(error.message);
+      throw error;
+    }
+  }
+
   return {
     amount,
     from: normalizeCurrency(parts[1]),
     to: normalizeCurrency(parts[2]),
-    source: normalizeSource(parts[3], defaultSource),
+    source,
+    ...(timeZone ? { timeZone } : {}),
+    ...(usesDefaultSource ? { usesDefaultSource: true as const } : {}),
   };
 }

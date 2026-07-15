@@ -2,6 +2,9 @@ import { handleUpdate, type BotDependencies, type TelegramUpdate } from "./app";
 import { SOURCE_NAMES, type SourceKey } from "./parser";
 import { RateService, parseCacheTtl } from "./providers/registry";
 import { TelegramClient } from "./telegram";
+import { createUserSettingsStore } from "./settings";
+
+export { UserSettingsObject } from "./settings";
 
 export interface Env {
   TELEGRAM_BOT_TOKEN: string;
@@ -9,6 +12,7 @@ export interface Env {
   DEFAULT_SOURCE?: string;
   CACHE_TTL_SECONDS?: string;
   COINGECKO_API_KEY?: string;
+  USER_SETTINGS?: DurableObjectNamespace;
 }
 
 let service: RateService | undefined;
@@ -30,6 +34,7 @@ function dependencies(env: Env): BotDependencies {
     defaultSource: defaultSource(env.DEFAULT_SOURCE),
     telegram: new TelegramClient(env.TELEGRAM_BOT_TOKEN),
     getQuote: (request) => service!.getQuote(request),
+    settings: createUserSettingsStore(env.USER_SETTINGS),
   };
 }
 

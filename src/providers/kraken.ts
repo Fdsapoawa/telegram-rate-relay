@@ -32,6 +32,7 @@ export class KrakenProvider implements RateProvider {
       rate: requirePositiveRate(ticker?.c?.[0], from, to),
       source: this.name,
       asOf: this.now(),
+      timeKind: "retrieved",
     };
   }
 }

@@ -5,3 +5,10 @@ compatibility_date = "2026-07-15"
 [vars]
 DEFAULT_SOURCE = "coinbase"
 CACHE_TTL_SECONDS = "30"
+
+[durable_objects]
+bindings = [{ name = "USER_SETTINGS", class_name = "UserSettingsObject" }]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["UserSettingsObject"]

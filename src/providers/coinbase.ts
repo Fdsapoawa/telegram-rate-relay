@@ -27,6 +27,7 @@ export class CoinbaseProvider implements RateProvider {
       rate: requirePositiveRate(data.data?.rates?.[to], from, to),
       source: this.name,
       asOf: this.now(),
+      timeKind: "retrieved",
     };
   }
 }

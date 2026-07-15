@@ -63,6 +63,7 @@ export class CoinGeckoProvider implements RateProvider {
       rate,
       source: this.name,
       asOf: timestamp ? new Date(timestamp * 1_000) : this.now(),
+      timeKind: timestamp ? "market" : "retrieved",
     };
   }
 }

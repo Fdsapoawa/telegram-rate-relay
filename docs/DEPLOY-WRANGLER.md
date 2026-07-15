@@ -19,6 +19,7 @@
 ```text
 start - 使用说明
 source - 查看可用汇率源
+time - 查看或设置个人时区
 help - 使用说明
 ```
 
@@ -45,6 +46,8 @@ CACHE_TTL_SECONDS = "30"
 
 - `DEFAULT_SOURCE`：`coinbase`、`coingecko`、`kraken` 或 `frankfurter`
 - `CACHE_TTL_SECONDS`：`0` 关闭缓存；允许范围 `0` 到 `3600`
+
+`wrangler.toml` 已声明 `USER_SETTINGS` Durable Object。首次部署时 Wrangler 会自动创建，用于保存每个 Telegram 用户的个人汇率源和时区，无需手动创建 KV。
 
 写入必需 Secret：
 

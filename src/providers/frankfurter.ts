@@ -25,6 +25,7 @@ export class FrankfurterProvider implements RateProvider {
       rate: requirePositiveRate(data.rates?.[to], from, to),
       source: this.name,
       asOf: data.date ? new Date(`${data.date}T00:00:00.000Z`) : this.now(),
+      timeKind: data.date ? "reference" : "retrieved",
     };
   }
 }

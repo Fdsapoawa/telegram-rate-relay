@@ -41,6 +41,7 @@ describe("rate providers", () => {
       rate: 7.207,
       source: "Coinbase",
       asOf: at,
+      timeKind: "retrieved",
     });
     expect(fetcher).toHaveBeenCalledWith(
       "https://api.coinbase.com/v2/exchange-rates?currency=USDT",
@@ -56,6 +57,7 @@ describe("rate providers", () => {
     expect(quote.rate).toBe(7.21);
     expect(quote.source).toBe("CoinGecko");
     expect(quote.asOf.toISOString()).toBe("2026-07-15T06:30:25.000Z");
+    expect(quote.timeKind).toBe("market");
   });
 
   it("reads a Kraken spot close price", async () => {
@@ -66,6 +68,7 @@ describe("rate providers", () => {
       rate: 1.0012,
       source: "Kraken",
       asOf: at,
+      timeKind: "retrieved",
     });
   });
 
@@ -77,6 +80,7 @@ describe("rate providers", () => {
       rate: 8.35,
       source: "Frankfurter",
       asOf: new Date("2026-07-14T00:00:00.000Z"),
+      timeKind: "reference",
     });
   });
 });

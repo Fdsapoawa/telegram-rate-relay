@@ -5,8 +5,8 @@
 部署在 Cloudflare Workers 上的 Telegram 多源汇率机器人。支持私聊换算和 Inline Mode，可在任意聊天框直接引用结果。
 
 ```text
-💰 5.2 USDT = 37.4764 CNY
-📡 Coinbase · 14:30:25
+💰 5.2 USDT ≈ 37.4764 CNY
+📡 Coinbase · 获取 14:30:25 · Asia/Shanghai (UTC+8)
 ```
 
 ## 功能
@@ -14,7 +14,9 @@
 - 法币、加密货币双向换算
 - 私聊：`5.2 USDT CNY Coinbase`
 - Inline：`@你的机器人 5.2 USDT CNY Coinbase`
-- `/source` 查看汇率源及正确名称
+- `/source` 查看或保存个人默认汇率源
+- `/time` 查看或保存个人时区，默认北京时间
+- Inline 可临时覆盖时区，不修改个人设置
 - 源名称忽略大小写，但必须完整匹配
 - 支持 `100 美元 人民币` 等常见中文别名
 - 缓存时间可配置，`0` 可关闭
@@ -33,7 +35,33 @@
 5.2 USDT CNY coinbase
 1 BTC USD CoinGecko
 100 EUR CNY Frankfurter
+5.2 USDT CNY none Shanghai
+5.2 USDT CNY Coinbase UTC
 ```
+
+`none` 占住汇率源位置，表示使用个人默认源；未设置个人源时使用 Worker 的 `DEFAULT_SOURCE`。它不区分大小写，但必须完整拼写，`nonew` 不会命中。
+
+## 个人设置与 Inline 覆盖
+
+```text
+/source CoinGecko
+/source reset
+/time Shanghai
+/time UTC8
+/time Asia/Shanghai
+/time reset
+```
+
+优先级：消息中显式设置 > 个人设置 > Worker 默认值。
+
+Inline 临时修改示例：
+
+```text
+@你的机器人 5.2 USDT CNY none Shanghai
+@你的机器人 5.2 USDT CNY Coinbase UTC
+```
+
+第一条使用个人默认汇率源，并只对本次结果使用上海时区；第二条同时指定 Coinbase 和 UTC。Inline 覆盖不会修改 `/source` 或 `/time` 保存的设置。
 
 汇率源名称不区分大小写，但必须完整拼写：
 
@@ -60,6 +88,7 @@
 ```text
 start - 使用说明
 source - 查看可用汇率源
+time - 查看或设置个人时区
 help - 使用说明
 ```
 
@@ -78,6 +107,8 @@ Cloudflare 会引导你：
 5. 构建和部署项目。
 
 仓库已有 `wrangler.toml` 和 `npm run deploy`，构建命令保持空白，部署命令使用自动识别值即可。
+
+部署会自动创建 Durable Object 保存每个 Telegram 用户的默认汇率源和时区，不需要手动创建或绑定 Workers KV。
 
 ### 3. 填写 Secret
 
@@ -153,12 +184,15 @@ https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo
 ```text
 5.2 USDT CNY
 /source
+/source CoinGecko
+/time
+/time UTC
 ```
 
 在任意 Telegram 聊天框：
 
 ```text
-@你的机器人用户名 5.2 USDT CNY Coinbase
+@你的机器人用户名 5.2 USDT CNY none Shanghai
 ```
 
 ## 在 Cloudflare 控制台修改配置
@@ -180,6 +214,8 @@ https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo
 
 - 不支持的币对会直接报错，不会偷偷切换汇率源。
 - Coinbase 和 CoinGecko 是市场参考价；Kraken 是单一交易所价格；Frankfurter 是 ECB 参考价。
+- `获取` 表示机器人请求汇率源的时间；`行情` 表示汇率源提供的行情时间；`参考` 表示参考汇率日期。
+- Worker 默认缓存 30 秒；可将 `CACHE_TTL_SECONDS` 设为 `0` 关闭，但上游汇率源仍可能自行缓存。
 - 不要把 Telegram Bot Token 或 Webhook Secret 提交到 Git。
 
 ## License
