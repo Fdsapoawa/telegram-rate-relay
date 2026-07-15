@@ -11,6 +11,16 @@
   "engines": {
     "node": ">=20"
   },
+  "cloudflare": {
+    "bindings": {
+      "TELEGRAM_BOT_TOKEN": {
+        "description": "从 Telegram [@BotFather](https://t.me/BotFather) 获取的 Bot Token。"
+      },
+      "TELEGRAM_WEBHOOK_SECRET": {
+        "description": "自定义随机字符串，只能包含字母、数字、下划线和连字符，长度 1 到 256。"
+      }
+    }
+  },
   "type": "module",
   "scripts": {
     "test": "vitest run",
