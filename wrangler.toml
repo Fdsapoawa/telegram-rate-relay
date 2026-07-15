@@ -1,0 +1,7 @@
+name = "telegram-rate-relay"
+main = "src/index.ts"
+compatibility_date = "2026-07-15"
+
+[vars]
+DEFAULT_SOURCE = "coinbase"
+CACHE_TTL_SECONDS = "30"
