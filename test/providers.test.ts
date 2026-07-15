@@ -60,6 +60,15 @@ describe("rate providers", () => {
     expect(quote.timeKind).toBe("market");
   });
 
+  it("registers Binance as a selectable source", async () => {
+    const fetcher = jsonFetcher({ symbol: "BTCUSDT", price: "64688.46" });
+    const service = new RateService({ cacheTtlSeconds: 0, fetcher });
+
+    await expect(
+      service.getQuote({ amount: 1, from: "BTC", to: "USDT", source: "binance" }),
+    ).resolves.toMatchObject({ rate: 64688.46, source: "Binance" });
+  });
+
   it("reads a Kraken spot close price", async () => {
     const fetcher = jsonFetcher({ error: [], result: { USDTZUSD: { c: ["1.0012", "1"] } } });
     const provider = new KrakenProvider(fetcher, () => at);

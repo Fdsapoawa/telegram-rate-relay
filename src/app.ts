@@ -44,6 +44,7 @@ export interface TelegramUpdate {
 const SOURCE_DESCRIPTIONS: Record<SourceKey, string> = {
   coinbase: "法币 / 加密货币",
   coingecko: "加密货币综合市场价",
+  binance: "Binance 现货交易对",
   kraken: "Kraken 现货交易对",
   frankfurter: "ECB 法币参考价",
 };
@@ -96,7 +97,7 @@ function publicError(error: unknown): string {
 export function timeHelp(currentTimeZone: string, at = new Date()): string {
   return [
     `🕒 当前时区：${timeZoneLabel(currentTimeZone, at)}`,
-    "设置：/time Shanghai、/time UTC8、/time Asia/Shanghai",
+    "设置：/time Shanghai、/time Taipei、/time Osaka、/time LosAngeles、/time UTC8",
     "重置：/time reset",
     "Inline：@机器人 5.2 USDT CNY none Shanghai",
     "💡 none 表示使用个人默认汇率源，只用于占住汇率源位置；必须完整拼写。",

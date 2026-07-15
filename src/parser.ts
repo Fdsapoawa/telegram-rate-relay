@@ -3,6 +3,7 @@ import { TimeZoneError, normalizeTimeZone } from "./timezone";
 export const SOURCE_NAMES = {
   coinbase: "Coinbase",
   coingecko: "CoinGecko",
+  binance: "Binance",
   kraken: "Kraken",
   frankfurter: "Frankfurter",
 } as const;

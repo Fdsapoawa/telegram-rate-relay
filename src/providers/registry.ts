@@ -1,6 +1,7 @@
 import type { RateQuote } from "../format";
 import type { ConversionRequest, SourceKey } from "../parser";
 import { TtlCache } from "./cache";
+import { BinanceProvider } from "./binance";
 import { CoinbaseProvider } from "./coinbase";
 import { CoinGeckoProvider } from "./coingecko";
 import { FrankfurterProvider } from "./frankfurter";
@@ -22,6 +23,7 @@ export class RateService {
     const providers: Array<[SourceKey, RateProvider]> = [
       ["coinbase", new CoinbaseProvider(fetcher)],
       ["coingecko", new CoinGeckoProvider(fetcher, options.coinGeckoApiKey)],
+      ["binance", new BinanceProvider(fetcher)],
       ["kraken", new KrakenProvider(fetcher)],
       ["frankfurter", new FrankfurterProvider(fetcher)],
     ];

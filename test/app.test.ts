@@ -33,6 +33,7 @@ describe("Telegram updates", () => {
     expect(deps.telegram.sendMessage).toHaveBeenCalledWith(42, sourceHelp("coinbase"));
     expect(sourceHelp("coinbase")).toContain("⭐ Coinbase");
     expect(sourceHelp("coinbase")).toContain("CoinGecko");
+    expect(sourceHelp("coinbase")).toContain("Binance");
     expect(sourceHelp("coinbase")).toContain("Frankfurter");
   });
 

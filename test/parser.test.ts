@@ -19,6 +19,10 @@ describe("parseConversion", () => {
     },
   );
 
+  it("matches Binance case-insensitively", () => {
+    expect(parseConversion("1 BTC USDT bInAnCe").source).toBe("binance");
+  });
+
   it("requires an exact source name", () => {
     expect(() => parseConversion("5.2 USDT CNY Coinbasew")).toThrowError(
       new ParseError("未知汇率源：Coinbasew。发送 /source 查看可用源"),
@@ -44,7 +48,7 @@ describe("parseConversion", () => {
   });
 
   it("requires an exact none placeholder", () => {
-    expect(() => parseConversion("5.2 USDT CNY nonew Shanghai")).toThrowError(
+    expect(() => parseConversion("5.2 USDT CNY nonew Asia/Shanghai")).toThrowError(
       new ParseError("未知汇率源：nonew。发送 /source 查看可用源"),
     );
   });

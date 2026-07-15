@@ -27,6 +27,7 @@
 | --- | --- | --- |
 | `Coinbase` | 法币、加密货币 | 默认源，市场参考价 |
 | `CoinGecko` | 包含加密货币的换算 | 多交易所综合市场价 |
+| `Binance` | Binance 支持的加密货币现货对 | 直接、反向或经 USDT 桥接；无需 API Key |
 | `Kraken` | Kraken 支持的现货交易对 | 交易所最新成交价 |
 | `Frankfurter` | 法币 | ECB 参考汇率，银行工作日更新 |
 
@@ -34,6 +35,7 @@
 5.2 USDT CNY
 5.2 USDT CNY coinbase
 1 BTC USD CoinGecko
+1 BTC USDT Binance
 100 EUR CNY Frankfurter
 5.2 USDT CNY none Shanghai
 5.2 USDT CNY Coinbase UTC
@@ -45,10 +47,16 @@
 
 ```text
 /source CoinGecko
+/source Binance
 /source reset
-/time Shanghai
 /time UTC8
+/time Shanghai
+/time Taipei
+/time Osaka
+/time LosAngeles
 /time Asia/Shanghai
+/time Asia/Taipei
+/time America/Los_Angeles
 /time reset
 ```
 
@@ -61,7 +69,7 @@ Inline 临时修改示例：
 @你的机器人 5.2 USDT CNY Coinbase UTC
 ```
 
-第一条使用个人默认汇率源，并只对本次结果使用上海时区；第二条同时指定 Coinbase 和 UTC。Inline 覆盖不会修改 `/source` 或 `/time` 保存的设置。
+第一条使用个人默认汇率源，并只对本次结果使用上海时区；第二条同时指定 Coinbase 和 UTC。Inline 覆盖不会修改 `/source` 或 `/time` 保存的设置。支持 `Shanghai`、`Taipei`、`Osaka`、`LosAngeles` 等裸城市，也支持 `Asia/Taipei`、`America/Los_Angeles` 等标准 IANA 时区。
 
 汇率源名称不区分大小写，但必须完整拼写：
 
@@ -214,6 +222,7 @@ https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo
 
 - 不支持的币对会直接报错，不会偷偷切换汇率源。
 - Coinbase 和 CoinGecko 是市场参考价；Kraken 是单一交易所价格；Frankfurter 是 ECB 参考价。
+- Binance 使用无需 API Key 的官方公开 Spot 行情接口；`USDT/CNY` 等不存在的交易对会明确报错。
 - `获取` 表示机器人请求汇率源的时间；`行情` 表示汇率源提供的行情时间；`参考` 表示参考汇率日期。
 - Worker 默认缓存 30 秒；可将 `CACHE_TTL_SECONDS` 设为 `0` 关闭，但上游汇率源仍可能自行缓存。
 - 不要把 Telegram Bot Token 或 Webhook Secret 提交到 Git。
