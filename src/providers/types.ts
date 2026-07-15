@@ -2,6 +2,8 @@ import type { RateQuote } from "../format";
 
 export type Fetcher = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
+export const runtimeFetch: Fetcher = (input, init) => globalThis.fetch(input, init);
+
 export interface RateProvider {
   readonly key: string;
   readonly name: string;

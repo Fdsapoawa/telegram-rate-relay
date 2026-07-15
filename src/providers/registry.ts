@@ -5,7 +5,7 @@ import { CoinbaseProvider } from "./coinbase";
 import { CoinGeckoProvider } from "./coingecko";
 import { FrankfurterProvider } from "./frankfurter";
 import { KrakenProvider } from "./kraken";
-import { ProviderError, type Fetcher, type RateProvider } from "./types";
+import { ProviderError, runtimeFetch, type Fetcher, type RateProvider } from "./types";
 
 export interface ProviderOptions {
   cacheTtlSeconds: number;
@@ -18,7 +18,7 @@ export class RateService {
   private readonly cache: TtlCache<RateQuote>;
 
   constructor(options: ProviderOptions) {
-    const fetcher = options.fetcher ?? fetch;
+    const fetcher = options.fetcher ?? runtimeFetch;
     const providers: Array<[SourceKey, RateProvider]> = [
       ["coinbase", new CoinbaseProvider(fetcher)],
       ["coingecko", new CoinGeckoProvider(fetcher, options.coinGeckoApiKey)],

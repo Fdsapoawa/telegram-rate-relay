@@ -1,5 +1,5 @@
 import type { RateQuote } from "../format";
-import { ProviderError, fetchJson, requirePositiveRate, type Fetcher, type RateProvider } from "./types";
+import { ProviderError, fetchJson, requirePositiveRate, runtimeFetch, type Fetcher, type RateProvider } from "./types";
 
 interface KrakenResponse {
   error?: string[];
@@ -13,7 +13,7 @@ export class KrakenProvider implements RateProvider {
   readonly name = "Kraken";
 
   constructor(
-    private readonly fetcher: Fetcher = fetch,
+    private readonly fetcher: Fetcher = runtimeFetch,
     private readonly now: () => Date = () => new Date(),
   ) {}
 

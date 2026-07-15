@@ -1,5 +1,5 @@
 import type { RateQuote } from "../format";
-import { fetchJson, requirePositiveRate, type Fetcher, type RateProvider } from "./types";
+import { fetchJson, requirePositiveRate, runtimeFetch, type Fetcher, type RateProvider } from "./types";
 
 interface CoinbaseResponse {
   data?: {
@@ -12,7 +12,7 @@ export class CoinbaseProvider implements RateProvider {
   readonly name = "Coinbase";
 
   constructor(
-    private readonly fetcher: Fetcher = fetch,
+    private readonly fetcher: Fetcher = runtimeFetch,
     private readonly now: () => Date = () => new Date(),
   ) {}
 

@@ -1,9 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { TtlCache } from "../src/providers/cache";
 import { CoinbaseProvider } from "../src/providers/coinbase";
 import { CoinGeckoProvider } from "../src/providers/coingecko";
 import { FrankfurterProvider } from "../src/providers/frankfurter";
 import { KrakenProvider } from "../src/providers/kraken";
+import { RateService } from "../src/providers/registry";
 
 const at = new Date("2026-07-15T06:30:25Z");
 
@@ -12,6 +13,26 @@ function jsonFetcher(body: unknown, status = 200) {
 }
 
 describe("rate providers", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("calls the default runtime fetch with the Worker global receiver", async () => {
+    const runtime = globalThis;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(function (this: unknown) {
+        if (this !== runtime) throw new TypeError("Illegal invocation");
+        return Promise.resolve(Response.json({ data: { rates: { CNY: "7.207" } } }));
+      }),
+    );
+    const service = new RateService({ cacheTtlSeconds: 0 });
+
+    await expect(
+      service.getQuote({ amount: 5.2, from: "USDT", to: "CNY", source: "coinbase" }),
+    ).resolves.toMatchObject({ rate: 7.207, source: "Coinbase" });
+  });
+
   it("reads a Coinbase exchange rate", async () => {
     const fetcher = jsonFetcher({ data: { currency: "USDT", rates: { CNY: "7.207" } } });
     const provider = new CoinbaseProvider(fetcher, () => at);

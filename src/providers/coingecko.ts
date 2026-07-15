@@ -1,5 +1,5 @@
 import type { RateQuote } from "../format";
-import { ProviderError, fetchJson, requirePositiveRate, type Fetcher, type RateProvider } from "./types";
+import { ProviderError, fetchJson, requirePositiveRate, runtimeFetch, type Fetcher, type RateProvider } from "./types";
 
 const CRYPTO_IDS: Record<string, string> = {
   BTC: "bitcoin",
@@ -31,7 +31,7 @@ export class CoinGeckoProvider implements RateProvider {
   readonly name = "CoinGecko";
 
   constructor(
-    private readonly fetcher: Fetcher = fetch,
+    private readonly fetcher: Fetcher = runtimeFetch,
     private readonly apiKey?: string,
     private readonly now: () => Date = () => new Date(),
   ) {}

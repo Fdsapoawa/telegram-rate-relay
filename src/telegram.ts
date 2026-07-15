@@ -1,5 +1,5 @@
 import type { InlineResult, TelegramGateway } from "./app";
-import { ProviderError, type Fetcher } from "./providers/types";
+import { ProviderError, runtimeFetch, type Fetcher } from "./providers/types";
 
 interface TelegramResponse {
   ok?: boolean;
@@ -9,7 +9,7 @@ interface TelegramResponse {
 export class TelegramClient implements TelegramGateway {
   constructor(
     private readonly token: string,
-    private readonly fetcher: Fetcher = fetch,
+    private readonly fetcher: Fetcher = runtimeFetch,
   ) {}
 
   sendMessage(chatId: number, text: string): Promise<void> {
