@@ -17,7 +17,7 @@ const numberFormatter = new Intl.NumberFormat("en-US", {
 
 const TIME_KIND_LABELS: Record<RateTimeKind, string> = {
   market: "行情",
-  retrieved: "获取",
+  retrieved: "",
   reference: "参考",
 };
 
@@ -38,8 +38,11 @@ export function formatResult(
   const displayedTime = timeKind === "reference"
     ? quote.asOf.toISOString().slice(0, 10)
     : time;
+  const timeLabel = TIME_KIND_LABELS[timeKind];
+  const timeText = timeLabel ? `${timeLabel} ${displayedTime}` : displayedTime;
   return [
     `💰 ${numberFormatter.format(request.amount)} ${request.from} ≈ ${numberFormatter.format(converted)} ${request.to}`,
-    `📡 ${quote.source} · ${TIME_KIND_LABELS[timeKind]} ${displayedTime} · ${timeZoneLabel(timeZone, quote.asOf)}`,
+    `📡 ${quote.source}`,
+    `🕒 ${timeText} · ${timeZoneLabel(timeZone, quote.asOf)}`,
   ].join("\n");
 }

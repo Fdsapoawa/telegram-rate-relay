@@ -6,7 +6,8 @@
 
 ```text
 💰 5.2 USDT ≈ 37.4764 CNY
-📡 Coinbase · 获取 14:30:25 · Asia/Shanghai (UTC+8)
+📡 Coinbase
+🕒 14:30:25 · Asia/Shanghai (UTC+8)
 ```
 
 ## 功能
@@ -225,7 +226,7 @@ https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo
 - 不支持的币对会直接报错，不会偷偷切换汇率源。
 - Coinbase 是市场参考价；Kraken 是单一交易所价格；Frankfurter 是 ECB 参考价。
 - Binance 使用无需 API Key 的官方 Google Cloud Spot 行情域名 `api-gcp.binance.com`；不存在的交易对会明确报错。
-- `获取` 表示机器人请求汇率源的时间；`行情` 表示汇率源提供的行情时间；`参考` 表示参考汇率日期。
+- `🕒` 无前缀时表示机器人请求汇率源的时间；`行情` 表示汇率源提供的行情时间；`参考` 表示参考汇率日期。
 - Worker 默认缓存 30 秒；可将 `CACHE_TTL_SECONDS` 设为 `0` 关闭，但上游汇率源仍可能自行缓存。
 - 不要把 Telegram Bot Token 或 Webhook Secret 提交到 Git。
 

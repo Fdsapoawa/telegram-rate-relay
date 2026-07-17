@@ -44,7 +44,7 @@ describe("Telegram updates", () => {
     expect(deps.getQuote).toHaveBeenCalledWith(expect.objectContaining({ source: "coinbase" }));
     expect(deps.telegram.sendMessage).toHaveBeenCalledWith(
       42,
-      "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase · 获取 14:30:25 · Asia/Shanghai (UTC+8)",
+      "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase\n🕒 14:30:25 · Asia/Shanghai (UTC+8)",
     );
   });
 
@@ -70,7 +70,7 @@ describe("Telegram updates", () => {
           type: "article",
           input_message_content: {
             message_text:
-              "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase · 获取 14:30:25 · Asia/Shanghai (UTC+8)",
+              "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase\n🕒 14:30:25 · Asia/Shanghai (UTC+8)",
           },
         }),
       ]),
@@ -130,7 +130,7 @@ describe("Telegram updates", () => {
 
     expect(deps.telegram.sendMessage).toHaveBeenCalledWith(
       42,
-      "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase · 获取 06:30:25 · UTC (UTC+0)",
+      "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase\n🕒 06:30:25 · UTC (UTC+0)",
     );
   });
 
@@ -158,7 +158,7 @@ describe("Telegram updates", () => {
         expect.objectContaining({
           input_message_content: {
             message_text:
-              "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase · 获取 06:30:25 · UTC (UTC+0)",
+              "💰 5.2 USDT ≈ 37.4764 CNY\n📡 Coinbase\n🕒 06:30:25 · UTC (UTC+0)",
           },
         }),
       ]),
